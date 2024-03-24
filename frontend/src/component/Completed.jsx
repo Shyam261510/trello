@@ -7,18 +7,18 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import OnHoldBody from "./OnHoldBody";
-function OnHold() {
+import CompletedBody from "./CompletedBody";
+function Completed() {
   const todos = useSelector((state) => state.todoReducer);
   return (
     <div>
       <h2 className="text-[#343434] font-semibold text-lg text-center">
-        On Hold
+        Completed
       </h2>
       {todos.todo.slice(1).map((todo) => (
         <div key={todo.id}>
-          {Array.isArray(todo.onHold) &&
-            todo.onHold.map((data) => (
+          {Array.isArray(todo.completed) &&
+            todo.completed.map((data) => (
               <div key={data.id}>
                 <Dialog>
                   <DialogTrigger asChild>
@@ -33,7 +33,7 @@ function OnHold() {
                         <h2>{data.title}</h2>
                       </DialogDescription>
                     </DialogHeader>
-                    <OnHoldBody onHold={data} />
+                    <CompletedBody completed={data} />
                   </DialogContent>
                 </Dialog>
               </div>
@@ -43,4 +43,4 @@ function OnHold() {
     </div>
   );
 }
-export default OnHold;
+export default Completed;

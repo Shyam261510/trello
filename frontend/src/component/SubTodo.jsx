@@ -28,12 +28,18 @@ function SubTodo() {
   return (
     <div>
       {todos.todo.slice(1).map((todo) => (
-        <div key={todo.id} className="flex flex-col gap-2">
+        <div key={todo.id}>
           {todo.subTodo.map((subTodo) => (
             <div key={subTodo.id}>
               <Dialog>
                 <DialogTrigger asChild>
-                  <button>{subTodo.title}</button>
+                  <div>
+                    <button className="flex flex-col gap-2 bg-[#F0F3FA] mt-3 p-5 rounded-lg shadow-[4px_6px_20px_12px_#cbd5e0] w-[13rem] h-[6rem] text-lg text-center font-semibold">
+                      {subTodo.title}
+                      {subTodo.discription ? <h2>{subTodo.discription}</h2> : ""}
+                    </button>
+                
+                  </div>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
                   <DialogHeader>

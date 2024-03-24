@@ -14,10 +14,10 @@ const initialState = {
       ],
       progress: [],
       onHold: [],
+      completed: [],
+      closed: [],
     },
   ],
-  progress: [],
-  onHold: [],
 };
 
 export const todoSlice = createSlice({
@@ -34,6 +34,7 @@ export const todoSlice = createSlice({
         },
       ];
     },
+
     addSubTodo: (state, action) => {
       const { id, title } = action.payload;
       const updatedTodos = state.todo.map((todo) => {
@@ -44,6 +45,7 @@ export const todoSlice = createSlice({
               ...todo.subTodo,
               {
                 id: nanoid(),
+                paretID:todo.id,
                 title: title,
               },
             ],
@@ -73,9 +75,9 @@ export const todoSlice = createSlice({
     },
     setProgress: (state, action) => {
       const progressData = action.payload;
-      state.progress = progressData;
+
       state.todo.map((todo) => {
-        todo.progress = [...progressData];
+        todo.progress = [...new Set(progressData)];
       });
     },
     removeSubTodo: (state, action) => {
@@ -91,9 +93,9 @@ export const todoSlice = createSlice({
     },
     setOnHold: (state, action) => {
       const onHoldData = action.payload;
-      state.onHold = onHoldData;
+
       state.todo.map((todo) => {
-        todo.onHold = [...onHoldData];
+        todo.onHold = [...new Set(onHoldData)];
       });
     },
     removeProgress: (state, action) => {
@@ -107,21 +109,78 @@ export const todoSlice = createSlice({
         };
       });
       state.todo = updatedTodo;
-      state.progress = state.progress.filter(
-        (progress) => progress.id !== progressIdToRemove
-      );
+    },
+    removeOnHold: (state, action) => {
+      const onHoldIdToRemove = action.payload;
+      const updatedTodo = state.todo.map((todo) => {
+        return {
+          ...todo,
+          onHold: todo.onHold.filter(
+            (progress) => progress.id !== onHoldIdToRemove
+          ),
+        };
+      });
+      state.todo = updatedTodo;
+    },
+    setCompleted: (state, action) => {
+      const completedData = action.payload;
+
+      state.todo.map((todo) => {
+        todo.completed = [...new Set(completedData)];
+      });
+    },
+    removeCompleted: (state, action) => {
+      const completedIdToRemove = action.payload;
+      const updatedTodo = state.todo.map((todo) => {
+        return {
+          ...todo,
+          completed: todo.completed.filter(
+            (completed) => completed.id !== completedIdToRemove
+          ),
+        };
+      });
+      state.todo = updatedTodo;
+    },
+    setClosed: (state, action) => {
+      const closedData = action.payload;
+      state.todo.map((todo) => {
+        todo.closed = [...new Set(closedData)];
+      });
+    },
+    removeClosed: (state, action) => {
+      const id = action.payload;
+      const updatedTodo = state.todo.map((todo) => {
+        return {
+          ...todo,
+          closed: todo.closed
+            ? todo.closed.filter((closed) => closed.id !== id)
+            : [],
+        };
+      });
+      state.todo = updatedTodo;
+    },
+    removeData: (state, action) => {
+      const id = action.payload;
+      state.todo = state.todo.filter((todo) => todo.id !== id);
     },
   },
 });
 
 export const {
   addTodo,
+
   addSubTodo,
   updateSubTodo,
   setProgress,
   removeSubTodo,
   setOnHold,
   removeProgress,
+  removeOnHold,
+  setCompleted,
+  removeCompleted,
+  setClosed,
+  removeClosed,
+  removeData,
 } = todoSlice.actions;
 
 export default todoSlice.reducer;
